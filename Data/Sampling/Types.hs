@@ -1,6 +1,7 @@
 
 module Data.Sampling.Types (
     Parameter(..)
+  , Target
   , Parameters
   , Observations
   , createTargetWithGradient
