@@ -1,5 +1,5 @@
 name:                mcmc-types
-version:             0.1.0.2
+version:             0.1.0.3
 synopsis:            Common types for sampling.
 description:         Common types for sampling.
 homepage:            http://github.com/jtobin/mcmc-types

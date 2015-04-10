@@ -1,6 +1,10 @@
 
 module Data.Sampling.Types (
     Parameter(..)
+  , continuous
+  , discrete
+  , continuousVector
+  , discreteVector
   , Target
   , Parameters
   , Observations
