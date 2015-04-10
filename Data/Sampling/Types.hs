@@ -19,6 +19,18 @@ data Parameter =
   | DiscreteVector [Int]
   deriving (Eq, Show)
 
+discrete :: Int -> Parameter
+discrete = Discrete
+
+continuous :: Double -> Parameter
+continuous = Continuous
+
+continuousVector :: [Double] -> Parameter
+continuousVector = ContinuousVector
+
+discreteVector :: [Int] -> Parameter
+discreteVector = DiscreteVector
+
 instance Num Parameter where
   (Continuous a) + (Continuous b) = Continuous (a + b)
   (Discrete a) + (Discrete b)     = Discrete (a + b)
