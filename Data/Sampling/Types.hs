@@ -78,7 +78,7 @@ createTargetWithoutGradient :: (Parameters -> Double) -> Target
 createTargetWithoutGradient f = Target f Nothing
 
 handleGradient :: Maybe t -> t
-handleGradient Nothing  = error "handleGradient: no gradient provided"
+handleGradient Nothing  = error "handleGradient: target has no gradient"
 handleGradient (Just g) = g
 
 type Environment a = Map String a
