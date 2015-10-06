@@ -8,7 +8,7 @@ author:              Jared Tobin
 maintainer:          jared@jtobin.ca
 build-type:          Simple
 category:            Numeric, Math
-cabal-version:       >= 1.18
+cabal-version:       >= 1.10
 description:
   Common types for implementing Markov Chain Monte Carlo (MCMC) algorithms.
   .
