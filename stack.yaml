@@ -1,6 +1,6 @@
 flags: {}
 packages:
   - '.'
-  - ../mwc-probability
-extra-deps: []
+extra-deps:
+  - mwc-probability-1.0.0
 resolver: lts-3.3
