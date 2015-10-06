@@ -1,87 +1,34 @@
+{-# OPTIONS_GHC -Wall #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Data.Sampling.Types (
-    Parameter(..)
-  , continuous
-  , discrete
-  , continuousVector
-  , discreteVector
-  , Target
-  , Parameters
-  , Observations
-  , createTargetWithGradient
-  , createTargetWithoutGradient
-  , handleGradient
-  , lTarget
-  , glTarget
+    Transition
+  , Chain(..)
+  , Target(..)
   ) where
 
-import Data.Map (Map)
+import Control.Monad.Trans.State.Strict (StateT)
+import System.Random.MWC.Probability (Prob)
 
-data Parameter =
-    Continuous Double
-  | Discrete Int
-  | ContinuousVector [Double]
-  | DiscreteVector [Int]
-  deriving (Eq, Show)
+-- | A transition operator.
+type Transition m a = StateT a (Prob m) ()
 
-discrete :: Int -> Parameter
-discrete = Discrete
+-- | The @Chain@ type specifies the state of a Markov chain at any given
+--   iteration.
+data Chain a b = Chain {
+    chainTarget   :: Target a
+  , chainScore    :: !Double
+  , chainPosition :: a
+  , chainTunables :: Maybe b
+  }
 
-continuous :: Double -> Parameter
-continuous = Continuous
-
-continuousVector :: [Double] -> Parameter
-continuousVector = ContinuousVector
-
-discreteVector :: [Int] -> Parameter
-discreteVector = DiscreteVector
-
-instance Num Parameter where
-  (Continuous a) + (Continuous b) = Continuous (a + b)
-  (Discrete a) + (Discrete b)     = Discrete (a + b)
-  _ + _ = noInstanceError
-
-  (Continuous a) - (Continuous b) = Continuous (a - b)
-  (Discrete a) - (Discrete b)     = Discrete (a - b)
-  _ - _ = noInstanceError
-
-  (Continuous a) * (Continuous b) = Continuous (a * b)
-  (Discrete a) * (Discrete b)     = Discrete (a * b)
-  _ * _ = noInstanceError
-
-  abs (Continuous a) = Continuous (abs a)
-  abs (Discrete a)   = Discrete (abs a)
-  abs _ = noInstanceError
-
-  signum (Continuous a) = Continuous (signum a)
-  signum (Discrete a)   = Discrete (signum a)
-  signum _ = noInstanceError
-
-  fromInteger = Continuous . fromInteger
-
-noInstanceError :: t
-noInstanceError = error
-  "only continuous and discrete parameters support ring operations"
+instance Show a => Show (Chain a b) where
+  show Chain {..} = filter (`notElem` "fromList []") (show chainPosition)
 
 -- | A @Target@ consists of a function from parameter space to the reals, as
 --   well as possibly a gradient.
-data Target = Target {
-    lTarget  :: Parameters -> Double
-  , glTarget :: Maybe (Parameters -> Parameters)
+data Target a = Target {
+    lTarget  :: a -> Double
+  , glTarget :: Maybe (a -> a)
   }
-
-createTargetWithGradient
-  :: (Parameters -> Double) -> (Parameters -> Parameters) -> Target
-createTargetWithGradient f g = Target f (Just g)
-
-createTargetWithoutGradient :: (Parameters -> Double) -> Target
-createTargetWithoutGradient f = Target f Nothing
-
-handleGradient :: Maybe t -> t
-handleGradient Nothing  = error "handleGradient: target has no gradient"
-handleGradient (Just g) = g
-
-type Environment a = Map String a
-type Parameters    = Environment Parameter
-type Observations  = Environment Parameter
 
