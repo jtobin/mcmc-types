@@ -1,4 +1,8 @@
-# mcmc-types [![Build Status](https://secure.travis-ci.org/jtobin/mcmc-types.png)](http://travis-ci.org/jtobin/mcmc-types)
+# mcmc-types
+
+[![Build Status](https://secure.travis-ci.org/jtobin/mcmc-types.png)](http://travis-ci.org/jtobin/mcmc-types)
+[![Hackage Version](https://img.shields.io/hackage/v/mcmc-types.svg)](http://hackage.haskell.org/package/mcmc-types)
+
 
 Common types for implementing Markov Chain Monte Carlo (MCMC) algorithms.
 
