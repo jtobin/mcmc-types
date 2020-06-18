@@ -36,6 +36,9 @@ module Data.Sampling.Types (
   ) where
 
 import Control.Monad.Trans.State.Strict (StateT)
+import Data.Csv
+import Data.Maybe (fromMaybe)
+import qualified Data.Vector as V
 import System.Random.MWC.Probability (Prob)
 
 -- | A generic transition operator.
@@ -54,6 +57,14 @@ data Chain a b = Chain {
 
 instance Show a => Show (Chain a b) where
   show Chain {..} = filter (`notElem` "fromList []") (show chainPosition)
+
+instance (ToRecord a, ToRecord b) => ToRecord (Chain a b) where
+  toRecord Chain {..} =
+    V.concat
+      [ (record [toField chainScore])
+      , (toRecord chainPosition)
+      , fromMaybe V.empty (toRecord <$> chainTunables)
+      ]
 
 -- | A @Target@ consists of a function from parameter space to the reals, as
 --   well as possibly a gradient.
